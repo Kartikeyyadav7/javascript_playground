@@ -33,6 +33,7 @@ const server = http.createServer((req, res) => {
 				}
 				console.log(`stdout: ${stdout}`);
 			});
+			res.write("File created");
 			res.end();
 		});
 	} else if (req.url === "/createfolder" && req.method === "POST") {
@@ -56,6 +57,7 @@ const server = http.createServer((req, res) => {
 				}
 				console.log(`stdout: ${stdout}`);
 			});
+			res.write("Folder created");
 			res.end();
 		});
 	}
