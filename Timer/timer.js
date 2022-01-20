@@ -14,11 +14,11 @@ class Timer {
 
 	start = () => {
 		if (this.onStart) {
-			this.onStart();
+			this.onStart(this.timeRemaining);
 		}
 		this.tick();
 		//* We can define a variable like const intervalId but then we won't be able to access the variable inside of the pause method so we have use this to get the refernce in the global
-		this.intervalId = setInterval(this.tick, 1000);
+		this.intervalId = setInterval(this.tick, 50);
 	};
 
 	pause = () => {
@@ -39,9 +39,9 @@ class Timer {
 				this.onComplete();
 			}
 		} else {
-			this.timeRemaining = this.timeRemaining - 1;
+			this.timeRemaining = this.timeRemaining - 0.05;
 			if (this.onTick) {
-				this.onTick();
+				this.onTick(this.timeRemaining);
 			}
 		}
 	};
@@ -51,6 +51,6 @@ class Timer {
 	}
 
 	set timeRemaining(time) {
-		this.durationInput.value = time;
+		this.durationInput.value = time.toFixed(2);
 	}
 }

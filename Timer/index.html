@@ -8,8 +8,26 @@
 	</head>
 	<body>
 		<h1>Timer</h1>
-		<svg width="200" height="200">
-			<circle r="20" cx="30" cy="30" />
+		<!-- the width and height defines the widht and height of the actual svg with
+		the origin being the left top  -->
+		<svg width="400" height="400">
+			<!-- The cx and cy property means the center of the x and y from the origin
+			of the svg , the fill property tell what fill color we want, with the
+			stroke it is the just the stroke color in the stroke width we define the
+			width , in stroke-dasharray we get the amount of space it will have a
+			stroke and the amount it will leave( white space) kindof like dash stroke
+			and if we pass the perimeter we will get the whole circle with no dashed
+			line (perimeter the whole circle 2*Math.pi *r ) and the stroke-dashOffset
+			we define what amount of stroke can it have white space of  -->
+			<circle
+				r="190"
+				cx="200"
+				cy="200"
+				fill="transparent"
+				stroke="blue"
+				stroke-width="10"
+				transform="rotate(-90 200 200)"
+			/>
 		</svg>
 		<input id="duration" value="30" />
 		<button id="start">Start</button>
