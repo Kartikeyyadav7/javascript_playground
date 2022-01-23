@@ -5,7 +5,12 @@ const fetchResult = async (searchTerm) => {
 		`http://www.omdbapi.com/?apikey=${API_KEY}&s=${searchTerm}`
 	);
 	const movies = await res.json();
-	console.log(movies);
+
+	if (movies.Error) {
+		return [];
+	}
+
+	return movies.Search;
 };
 
 const input = document.querySelector("input");
@@ -33,22 +38,32 @@ and after doing that we take that timeout and clearTimeout and then we do this u
 // };
 
 //? The debounce function is used for reusing the concept of debounce , it takes a function as a agrument and return a function
-const debounce = (func, delay = 1000) => {
-	let timeoutId;
-	// return (args1, args2, args3) {
-	//     timeoutId = setTimeout(() => func(args1, args2,args3), 1000)
-	// }
-	// Same as the above just lets helps us because we don't know the no. of agruments to the function
-	return (...args) => {
-		if (timeoutId) {
-			clearTimeout(timeoutId);
-		}
-		timeoutId = setTimeout(() => func.apply(null, args), delay);
-	};
+// const debounce = (func, delay = 1000) => {
+// 	let timeoutId;
+// return (args1, args2, args3) {
+//     timeoutId = setTimeout(() => func(args1, args2,args3), 1000)
+// }
+// Same as the above just lets helps us because we don't know the no. of agruments to the function
+// 	return (...args) => {
+// 		if (timeoutId) {
+// 			clearTimeout(timeoutId);
+// 		}
+// 		timeoutId = setTimeout(() => func.apply(null, args), delay);
+// 	};
+// };
+
+const onInput = async (e) => {
+	const movies = await fetchResult(e.target.value);
+	movies.map((movie) => {
+		const div = document.createElement("div");
+
+		div.innerHTML = `
+			<img src="${movie.Poster}"	/>
+			<p>${movie.Title}</p>
+		`;
+
+		document.querySelector(".target").appendChild(div);
+	});
 };
 
-const onInput = debounce((e) => {
-	fetchResult(e.target.value);
-}, 1000);
-
-input.addEventListener("input", onInput);
+input.addEventListener("input", debounce(onInput));
