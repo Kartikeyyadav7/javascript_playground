@@ -13,7 +13,6 @@ const fetchResult = async (searchTerm) => {
 	return movies.Search;
 };
 
-
 //What this function will do is call the fetchResult again and again as the user types and make request i.e for each word pressed and this is not good
 
 // const onInput = (e) => {
@@ -62,23 +61,67 @@ root.innerHTML = `
 `;
 
 const input = document.querySelector(".input");
-const results = document.querySelector(".results")
-
+const results = document.querySelector(".results");
 
 const onInput = async (e) => {
 	const movies = await fetchResult(e.target.value);
+
+	results.innerHTML = ""; // This clear the results div so that after every request the movies doesn't get appened to the bottom of the list
+
 	movies.map((movie) => {
-		const anchor = document.createElement("a");
-		anchor.classList.add("result")
+		const option = document.createElement("a");
 
-		results.classList.add("is_active")
+		option.classList.add("result");
 
-		anchor.innerHTML = `
-			<img class="image" src="${movie.Poster}"	/>
+		results.classList.add("is_active");
+
+		const imgSrc = movie.Poster === "N/A" ? "" : movie.Poster;
+
+		option.innerHTML = `
+			<img class="image" src="${imgSrc}"	/>
 			<p>${movie.Title}</p>
 		`;
-		document.querySelector(".results").appendChild(anchor);
+
+		option.addEventListener("click", () => {
+			results.classList.remove("is_active");
+			input.value = movie.Title;
+			onMovieClick(movie);
+		});
+
+		document.querySelector(".results").appendChild(option);
 	});
 };
 
-input.addEventListener("input", debounce((onInput)));
+input.addEventListener("input", debounce(onInput));
+
+//? This below code allows us to click anywhere on the page where the results are not present and that will close the dropdown
+document.addEventListener("click", (event) => {
+	if (!root.contains(event.target)) {
+		results.classList.remove("is_active");
+	}
+});
+
+const onMovieClick = async (movie) => {
+	const res = await fetch(
+		`http://www.omdbapi.com/?apikey=${API_KEY}&i=${movie.imdbID}`
+	);
+	const movieDetails = await res.json();
+
+	console.log(movieDetails);
+	document.querySelector(".summary").innerHTML = movieTemplate(movieDetails)
+};
+
+const movieTemplate = (movieDetails) => {
+	return `	
+	<div>
+		<div>
+			<img src="${movieDetails.Poster}" alt="">
+		</div>
+		<div>
+			<h2>${movieDetails.Title}</h2>
+			<h4>${movieDetails.Genre}</h4>
+			<p>${movieDetails.Plot}</p>
+		</div>
+	</div>	
+	`
+}
