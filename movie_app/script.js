@@ -13,7 +13,6 @@ const fetchResult = async (searchTerm) => {
 	return movies.Search;
 };
 
-const input = document.querySelector("input");
 
 //What this function will do is call the fetchResult again and again as the user types and make request i.e for each word pressed and this is not good
 
@@ -52,18 +51,34 @@ and after doing that we take that timeout and clearTimeout and then we do this u
 // 	};
 // };
 
+const root = document.querySelector(".autoComplete");
+
+root.innerHTML = `
+	<label>
+	<b>Search for a move</b>
+	</label>
+	<input class="input" />
+	<div class="results"></div>
+`;
+
+const input = document.querySelector(".input");
+const results = document.querySelector(".results")
+
+
 const onInput = async (e) => {
 	const movies = await fetchResult(e.target.value);
 	movies.map((movie) => {
-		const div = document.createElement("div");
+		const anchor = document.createElement("a");
+		anchor.classList.add("result")
 
-		div.innerHTML = `
-			<img src="${movie.Poster}"	/>
+		results.classList.add("is_active")
+
+		anchor.innerHTML = `
+			<img class="image" src="${movie.Poster}"	/>
 			<p>${movie.Title}</p>
 		`;
-
-		document.querySelector(".target").appendChild(div);
+		document.querySelector(".results").appendChild(anchor);
 	});
 };
 
-input.addEventListener("input", debounce(onInput));
+input.addEventListener("input", debounce((onInput)));
