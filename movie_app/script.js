@@ -14,7 +14,7 @@ const autoCompleteConfig = {
 	},
 	async fetchResult(searchTerm) {
 		const res = await fetch(
-			`http://www.omdbapi.com/?apikey=${API_KEY}&s=${searchTerm}`
+			`https://www.omdbapi.com/?apikey=${API_KEY}&s=${searchTerm}`
 		);
 		const movies = await res.json();
 
@@ -47,7 +47,7 @@ let rightMovie;
 
 const onMovieClick = async (movie, summary, side) => {
 	const res = await fetch(
-		`http://www.omdbapi.com/?apikey=${API_KEY}&i=${movie.imdbID}`
+		`https://www.omdbapi.com/?apikey=${API_KEY}&i=${movie.imdbID}`
 	);
 	const movieDetails = await res.json();
 
