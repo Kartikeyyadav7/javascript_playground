@@ -47,9 +47,17 @@
 .details {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	max-width: 200px;
-	/* margin: auto; */
+
 	text-align: center;
 	background-color: cadetblue;
 	color: black;
-	/* font-family: arial; */
+}
+
+.not_first {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	max-width: 200px;
+
+	text-align: center;
+	background-color: yellowgreen;
+	color: black;
 }
