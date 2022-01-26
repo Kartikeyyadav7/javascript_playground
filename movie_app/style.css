@@ -12,9 +12,18 @@
 	z-index: 1;
 }
 
-.image {
+.result_image {
 	width: 80px;
 	height: 80px;
+}
+
+.posterImg {
+	width: 200px;
+	height: 200px;
+}
+
+.movie_plot {
+	width: 220px;
 }
 
 .result {
@@ -28,4 +37,19 @@
 
 .is_active {
 	display: block;
+}
+
+.columns {
+	display: flex;
+	gap: 20%;
+}
+
+.details {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	max-width: 200px;
+	/* margin: auto; */
+	text-align: center;
+	background-color: cadetblue;
+	color: black;
+	/* font-family: arial; */
 }

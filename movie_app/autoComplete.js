@@ -22,17 +22,15 @@ const createAutoComplete = ({ root, renderOption, onOptionSelect, inputValue, fe
 
             results.classList.add("is_active");
 
-
             option.innerHTML = renderOption(item);
 
             option.addEventListener("click", () => {
                 results.classList.remove("is_active");
                 input.value = inputValue(item);
-
                 onOptionSelect(item);
             });
 
-            document.querySelector(".results").appendChild(option);
+            results.appendChild(option);
         });
     };
 

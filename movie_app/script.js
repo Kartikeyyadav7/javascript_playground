@@ -1,18 +1,14 @@
 const API_KEY = "d66d0a7d";
 
-
-createAutoComplete({
-	root: document.querySelector(".autoComplete"),
+const autoCompleteConfig = {
 	renderOption: (movie) => {
 		const imgSrc = movie.Poster === "N/A" ? "" : movie.Poster;
 		return `
-			<img class="image" src="${imgSrc}"	/>
+			<img class="result_image" src="${imgSrc}"	/>
 			<p>${movie.Title}</p>
 		`
 	},
-	onOptionSelect: (movie) => {
-		onMovieClick(movie)
-	},
+
 	inputValue: (movie) => {
 		return movie.Title
 	},
@@ -28,16 +24,32 @@ createAutoComplete({
 
 		return movies.Search;
 	}
+}
+
+createAutoComplete({
+	...autoCompleteConfig,
+	root: document.querySelector("#left-autoComplete"),
+	onOptionSelect: (movie) => {
+		onMovieClick(movie, document.querySelector('#left-summary'))
+	},
 })
 
-const onMovieClick = async (movie) => {
+createAutoComplete({
+	...autoCompleteConfig,
+	root: document.querySelector("#right-autoComplete"),
+	onOptionSelect: (movie) => {
+		onMovieClick(movie, document.querySelector("#right-summary"))
+	},
+})
+
+const onMovieClick = async (movie, summary) => {
 	const res = await fetch(
 		`http://www.omdbapi.com/?apikey=${API_KEY}&i=${movie.imdbID}`
 	);
 	const movieDetails = await res.json();
 
 	console.log(movieDetails);
-	document.querySelector(".summary").innerHTML = movieTemplate(movieDetails)
+	summary.innerHTML = movieTemplate(movieDetails)
 };
 
 
@@ -46,13 +58,33 @@ const movieTemplate = (movieDetails) => {
 	return `	
 	<div>
 		<div>
-			<img src="${movieDetails.Poster}" alt="">
+			<img src="${movieDetails.Poster}" class="posterImg" alt="${movieDetails.Title}">
 		</div>
 		<div>
 			<h2>${movieDetails.Title}</h2>
-			<h4>${movieDetails.Genre}</h4>
-			<p>${movieDetails.Plot}</p>
+			<h3>${movieDetails.Genre}</h3>
+			<p class="movie_plot" >${movieDetails.Plot}</p>
 		</div>
+		<article class="details" >
+			<h3 class="subtitle">Awards</h3>
+			<p class="title">${movieDetails.Awards}</p>
+		</article>
+		<article class="details" >
+			<h3 class="subtitle">Box Office</h3>
+			<p class="title">${movieDetails.BoxOffice}</p>
+		</article>
+		<article class="details" >
+			<h3 class="subtitle">Metascore</h3>
+			<p class="title">${movieDetails.Metascore}</p>
+		</article>
+		<article class="details" >
+			<h3 class="subtitle">IMDB Rating</h3>
+			<p class="title">${movieDetails.imdbRating}</p>
+		</article>
+		<article class="details" >
+			<h3 class="subtitle">IMDB Votes</h3>
+			<p class="title">${movieDetails.imdbVotes}</p>
+		</article >
 	</div>	
 	`
 }
