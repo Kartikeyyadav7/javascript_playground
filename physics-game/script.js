@@ -99,11 +99,16 @@ const stepThroughCell = (row, column) => {
             vertical[row][column - 1] = true;
         } else if (direction === 'right') {
             vertical[row][column] = true
+        } else if (direction === 'up') {
+            horizontal[row - 1][column] = true;
+        } else if (direction === 'down') {
+            horizontal[row][column] = true;
         }
 
+        //Visit that next cells
+        stepThroughCell(nextRow, nextColumn)
     }
-    //Visit that next cells
 
 }
 
-stepThroughCell(1, 1)
+stepThroughCell(nextRow, nextColumn)
