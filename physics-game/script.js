@@ -4,6 +4,19 @@ const cells = 3
 const width = 600
 const height = 600
 
+const shuffle = (arr) => {
+    let counter = arr.length
+
+    while (counter > 0) {
+        const index = Math.floor(Math.random() * counter);
+        counter--;
+        const temp = arr[counter];
+        arr[counter] = arr[index];
+        arr[index] = temp;
+    }
+
+    return arr
+}
 
 const engine = Engine.create();
 
@@ -58,13 +71,15 @@ const stepThroughCell = (row, column) => {
     grid[row][column] = true;
 
     //Assemble randomly ordered list of neighbours
-    const neighbours = [
+    const neighbours = shuffle([
         [row - 1, column],
         [row, column + 1],
         [row + 1, column],
         [row, column - 1]
-    ]
+    ])
     //For each neighbour...
+
+    console.log(neighbours)
 
     //See if that neighbour is out of bounds
 
@@ -76,4 +91,4 @@ const stepThroughCell = (row, column) => {
 
 }
 
-stepThroughCell(startRow, startCol)
+stepThroughCell(1, 1)
