@@ -4,7 +4,9 @@ const cells = 3
 const width = 600
 const height = 600
 
-const shuffle = (arr) => {
+const unitLength = width / cells;
+
+const shuffle = arr => {
     let counter = arr.length
 
     while (counter > 0) {
@@ -90,7 +92,7 @@ const stepThroughCell = (row, column) => {
         }
 
         //If we have visited that neighbour , continue to next neighbour
-        if (grid[nextRow, nextColumn]) {
+        if (grid[nextRow][nextColumn]) {
             continue;
         }
 
@@ -108,7 +110,50 @@ const stepThroughCell = (row, column) => {
         //Visit that next cells
         stepThroughCell(nextRow, nextColumn)
     }
-
 }
 
-stepThroughCell(nextRow, nextColumn)
+stepThroughCell(startRow, startCol)
+
+console.log(horizontal)
+
+//We have to figure out where we want to draw the rectangle in the maze for the obstacles
+
+//For drawing the horizontal rectangles 
+horizontal.forEach((row, rowIndex) => {
+    row.forEach((open, columnIndex) => {
+        if (open) {
+            return
+        }
+
+        const wall = Bodies.rectangle(
+            columnIndex * unitLength + unitLength / 2,
+            rowIndex * unitLength + unitLength,
+            unitLength,
+            10,
+            {
+                isStatic: true
+            }
+        )
+        World.add(world, wall)
+    })
+})
+
+vertical.forEach((row, rowIndex) => {
+    row.forEach((open, columnIndex) => {
+        if (open) {
+            return
+        }
+
+        const wall = Bodies.rectangle(
+            columnIndex * unitLength + unitLength,
+            rowIndex * unitLength + unitLength / 2,
+            10,
+            unitLength,
+            {
+                isStatic: true
+            }
+        )
+        World.add(world, wall)
+    })
+})
+
