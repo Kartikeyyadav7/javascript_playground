@@ -1,6 +1,6 @@
-const { Engine, Render, Runner, World, Bodies } = Matter;
+const { Engine, Render, Runner, World, Bodies, Body } = Matter;
 
-const cells = 3
+const cells = 10
 const width = 600
 const height = 600
 
@@ -21,6 +21,8 @@ const shuffle = arr => {
 }
 
 const engine = Engine.create();
+
+engine.world.gravity.y = 0
 
 const { world } = engine;
 
@@ -157,6 +159,8 @@ vertical.forEach((row, rowIndex) => {
     })
 })
 
+//Goal
+
 const goal = Bodies.rectangle(
     width - unitLength / 2,
     height - unitLength / 2,
@@ -168,3 +172,32 @@ const goal = Bodies.rectangle(
 )
 
 World.add(world, goal)
+
+//Ball 
+
+const ball = Bodies.circle(
+    unitLength / 2,
+    unitLength / 2,
+    unitLength / 4
+)
+
+World.add(world, ball)
+
+document.addEventListener('keypress', event => {
+    const { x, y } = ball.velocity;
+
+    if (event.key === 'w') {
+        Body.setVelocity(ball, { x, y: y - 5 })
+    }
+
+    if (event.key === 'd') {
+        Body.setVelocity(ball, { x: x + 5, y })
+    }
+    if (event.key === 'a') {
+        Body.setVelocity(ball, { x: x - 5, y })
+    }
+    if (event.key === 's') {
+        Body.setVelocity(ball, { x, y: y + 5 })
+    }
+
+})
