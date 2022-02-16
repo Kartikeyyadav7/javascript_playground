@@ -5,9 +5,21 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Secret Message</title>
+		<style>
+			.hide {
+				opacity: 0;
+			}
+		</style>
 	</head>
 	<body>
-		<div>
+		<div id="message-secret" class="hide">
+			<h2>You secret message is</h2>
+			<h3></h3>
+			<div>
+				<a href="./index.html">Create your own secret message</a>
+			</div>
+		</div>
+		<div id="main">
 			<form>
 				<label for="message">Message</label>
 				<input type="text" name="message" id="message-input" />
