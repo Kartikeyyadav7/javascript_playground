@@ -1,6 +1,8 @@
-const http = require('http');
+const fs = require('fs')
 
-http.createServer((req, res) => {
-    res.write('Hello World!');
-    res.end()
-}).listen(8080)
+fs.readdir(process.cwd(), (err, filesName) => {
+    if (err) {
+        console.log("Error occured", err)
+    }
+    console.log(filesName)
+})
