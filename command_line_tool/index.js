@@ -1,15 +1,22 @@
 const fs = require('fs')
 
-fs.readdir(process.cwd(), (err, filesNames) => {
+const { lstat } = fs.promises;
+
+fs.readdir(process.cwd(), async (err, fileNames) => {
     if (err) {
         console.log("Error occured", err)
     }
-    for (let fileName of fileNames) {
-        fs.lstat(fileName, (err, stats) => {
-            if (err) {
-                console.log(err)
-            }
-            console.log(fileName, stats.isFile())
-        })
+
+    const statPromises = fileNames.map(fileName => {
+        return lstat(fileName)
+    })
+
+    const allStats = await Promise.all(statPromises);
+
+    for (let stat of allStats) {
+        const index = allStats.indexOf(stats);
+
+        console.log(fileNames[index], stat.isFile())
     }
 })
+
