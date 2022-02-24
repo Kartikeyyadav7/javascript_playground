@@ -9,7 +9,7 @@ app.get('/', (req, res) => {
         <form method="POST">
             <input name="email" placeholder="email" />
             <input name="password" placeholder="password" />
-            <input name="confirmPassword" placeholder="conform password" />
+            <input name="confirmPassword" placeholder="confirm password" />
             <button>Sign Up </button>
         </form>
        </div> 
@@ -17,27 +17,10 @@ app.get('/', (req, res) => {
     )
 })
 
-const bodyParser = (req, res, next) => {
-    if (req.method === "POST") {
+app.use(express.urlencoded({ extended: true }));
 
-        req.on("data", (data) => {
-            const parsed = data.toString('utf8')
-            const formValues = parsed.split('&')
-            const formData = {}
 
-            for (let formValue of formValues) {
-                const [key, value] = formValue.split("=")
-                formData[key] = value
-            }
-            req.body = formData;
-            next()
-        })
-    } else {
-        next()
-    }
-}
-
-app.post("/", bodyParser, (req, res) => {
+app.post("/", (req, res) => {
     console.log(req.body)
     res.send("Sign up completed")
 })
