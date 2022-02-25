@@ -15,6 +15,21 @@ class UserRepository {
             fs.writeFileSync(this.fileName, '[]')
         }
     }
+
+    async getAll() {
+        return JSON.parse(await fs.promises.readFile(this.fileName, {
+            encoding: 'utf8'
+        }))
+    }
 }
 
-new UserRepository('test.txt')
+const test = async () => {
+
+    const repo = new UserRepository('user.json')
+
+    const users = await repo.getAll()
+
+    console.log(users)
+}
+
+test()
