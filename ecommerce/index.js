@@ -1,4 +1,5 @@
 const express = require('express')
+const userRepo = require('./repository/user')
 
 const app = express()
 
@@ -21,7 +22,17 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.post("/", (req, res) => {
-    console.log(req.body)
+    const { email, password, confirmPassword } = req.body;
+    const existingUser = userRepo.getOneBy({ email })
+
+    if (existingUser) {
+        return res.send('Email already in Use')
+    }
+
+    if (password !== confirmPassword) {
+        return res.send("Passwords must match")
+    }
+
     res.send("Sign up completed")
 })
 
