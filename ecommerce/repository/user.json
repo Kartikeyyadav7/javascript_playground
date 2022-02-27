@@ -1,9 +1,12 @@
 [
-  {
-    "email": "hello@gmail.com",
-    "password": "password",
-    "id": "671a689a",
-    "confirmPassword": "asdasdf",
-    "confirmPassword1": "asdasdf"
-  }
+	{
+		"email": "hello@gmail.com",
+		"password": "hello",
+		"id": "a4a9249d"
+	},
+	{
+		"email": "hello2@gmail.com",
+		"password": "hello",
+		"id": "e85914c2"
+	}
 ]

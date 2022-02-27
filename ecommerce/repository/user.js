@@ -1,5 +1,6 @@
 const fs = require('fs')
-const crypto = require('crypto')
+const crypto = require('crypto');
+const { REPL_MODE_STRICT } = require('repl');
 
 class UserRepository {
     constructor(fileName) {
@@ -64,13 +65,36 @@ class UserRepository {
         await this.writeAll(records)
 
     }
+
+    async getOneBy(filters) {
+
+        const records = await this.getAll()
+
+        for (let record of records) {
+            let found = true;
+
+            for (let key in filters) {
+                if (record[key] !== filters[key]) {
+                    found = false;
+                }
+            }
+
+            if (found) {
+                return record;
+            }
+        }
+    }
 }
 
 const test = async () => {
 
     const repo = new UserRepository('user.json')
 
-    await repo.update('671a689a', { confirmPassword1: "asdasdf" })
+    // const user = await repo.create({ email: 'hello@gmail.com', password: 'hello' })
+
+    const user = await repo.getOneBy({ email: 'hello@gmail.com', password: 'helslo' })
+
+    console.log(user)
 
 }
 
