@@ -1,5 +1,6 @@
 const express = require('express')
 const userRepo = require('./repository/user')
+const cookieSession = require('cookie-session')
 
 const app = express()
 
@@ -19,11 +20,16 @@ app.get('/', (req, res) => {
 })
 
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieSession({
+    keys: ['asdlkfajwjaskdf#@#@$@lkasje39']
+}))
 
 
-app.post("/", (req, res) => {
+app.post("/", async (req, res) => {
     const { email, password, confirmPassword } = req.body;
-    const existingUser = userRepo.getOneBy({ email })
+    const existingUser = await userRepo.getOneBy({ email })
+
+    console.log(existingUser)
 
     if (existingUser) {
         return res.send('Email already in Use')
@@ -32,6 +38,10 @@ app.post("/", (req, res) => {
     if (password !== confirmPassword) {
         return res.send("Passwords must match")
     }
+
+    const user = await userRepo.create({ email, password })
+
+    req.session.userID = user.id
 
     res.send("Sign up completed")
 })
