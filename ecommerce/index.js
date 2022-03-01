@@ -4,9 +4,11 @@ const cookieSession = require('cookie-session')
 
 const app = express()
 
-app.get('/', (req, res) => {
+app.get('/signup', (req, res) => {
     res.send(
         `
+        <div>
+        Your Id is: ${req.session?.userID}
        <div>
         <form method="POST">
             <input name="email" placeholder="email" />
@@ -15,6 +17,7 @@ app.get('/', (req, res) => {
             <button>Sign Up </button>
         </form>
        </div> 
+       </div>
         `
     )
 })
@@ -25,7 +28,7 @@ app.use(cookieSession({
 }))
 
 
-app.post("/", async (req, res) => {
+app.post("/signup", async (req, res) => {
     const { email, password, confirmPassword } = req.body;
     const existingUser = await userRepo.getOneBy({ email })
 
@@ -45,6 +48,44 @@ app.post("/", async (req, res) => {
 
     res.send("Sign up completed")
 })
+
+app.get("/signout", (req, res) => {
+    req.session = null;
+    res.send("You are logged out")
+})
+
+app.get("/signin", (req, res) => {
+    res.send(
+        `
+       <div>
+        <form method="POST">
+            <input name="email" placeholder="email" />
+            <input name="password" placeholder="password" />
+            <button>Sign In </button>
+        </form>
+       </div> 
+        `
+    )
+})
+
+
+app.post('/signin', async (req, res) => {
+    const { email, password } = req.body;
+    const user = await userRepo.getOneBy({ email })
+
+    if (!user) {
+        return res.send("User not found")
+    }
+
+    if (user.password !== password) {
+        return res.send("Password not valid")
+    }
+
+    req.session.userID = user.id
+
+    res.send("You are logged in")
+})
+
 
 app.listen("3000", (req, res) => {
     console.log("server started at 3000")

@@ -3,5 +3,15 @@
     "email": "Kartikeyyadav.13579@gmail.com",
     "password": "adafd",
     "id": "36618d00"
+  },
+  {
+    "email": "test@test.com",
+    "password": "password",
+    "id": "7decc41d"
+  },
+  {
+    "email": "test2@test.com",
+    "password": "password",
+    "id": "240b24a5"
   }
 ]
