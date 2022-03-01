@@ -1,6 +1,8 @@
 const fs = require('fs')
 const crypto = require('crypto');
-const { REPL_MODE_STRICT } = require('repl');
+const util = require('util')
+
+const scrypt = util.promisify(crypto.scrypt)
 
 class UserRepository {
     constructor(fileName) {
@@ -25,11 +27,24 @@ class UserRepository {
     }
 
     async create(attr) {
+
         attr.id = this.randomId()
+
+        const salt = crypto.randomBytes(8).toString('hex')
+        const buff = await scrypt(attr.password, salt, 64)
+
         const records = await this.getAll()
-        records.push(attr);
+
+        const record = {
+            ...attr,
+            password: `${buff.toString('hex')}.${salt}`
+        }
+
+        records.push(record);
+
         this.writeAll(records)
-        return attr;
+
+        return record;
     }
 
     async writeAll(records) {
