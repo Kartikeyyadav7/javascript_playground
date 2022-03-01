@@ -77,7 +77,12 @@ app.post('/signin', async (req, res) => {
         return res.send("User not found")
     }
 
-    if (user.password !== password) {
+    const validPassword = await userRepo.comparedPassword(
+        user.password,
+        password
+    )
+
+    if (!validPassword) {
         return res.send("Password not valid")
     }
 

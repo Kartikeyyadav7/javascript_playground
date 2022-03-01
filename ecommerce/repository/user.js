@@ -47,6 +47,14 @@ class UserRepository {
         return record;
     }
 
+    async comparedPassword(saved, supplied) {
+        const [hashed, salt] = saved.split('.')
+
+        const hashSuppliedBuff = await scrypt(supplied, salt, 64)
+
+        return hashed === hashSuppliedBuff.toString('hex')
+    }
+
     async writeAll(records) {
         //* Here the '2' argument in JSON.stringify function is used to define the leve of indentation we need in the file itself so that it is easier to read
         await fs.promises.writeFile(this.fileName, JSON.stringify(records, null, 2))
