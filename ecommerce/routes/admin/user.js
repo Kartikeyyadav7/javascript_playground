@@ -4,24 +4,8 @@ const express = require('express')
 const router = express.Router()
 
 router.get('/signup', (req, res) => {
-    res.send(
-        `
-        <div>
-        Your Id is: ${req.session?.userID}
-       <div>
-        <form method="POST">
-            <input name="email" placeholder="email" />
-            <input name="password" placeholder="password" />
-            <input name="confirmPassword" placeholder="confirm password" />
-            <button>Sign Up </button>
-        </form>
-       </div> 
-       </div>
-        `
-    )
+    res.render('signup', { req })
 })
-
-
 
 router.post("/signup", async (req, res) => {
     const { email, password, confirmPassword } = req.body;
@@ -50,17 +34,7 @@ router.get("/signout", (req, res) => {
 })
 
 router.get("/signin", (req, res) => {
-    res.send(
-        `
-       <div>
-        <form method="POST">
-            <input name="email" placeholder="email" />
-            <input name="password" placeholder="password" />
-            <button>Sign In </button>
-        </form>
-       </div> 
-        `
-    )
+    res.render('signin')
 })
 
 
