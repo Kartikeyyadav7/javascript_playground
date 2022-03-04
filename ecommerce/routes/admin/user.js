@@ -1,5 +1,6 @@
 const userRepo = require("../../repository/user")
 const express = require('express')
+const { check, validationResult } = require("express-validator")
 
 const router = express.Router()
 
@@ -7,7 +8,13 @@ router.get('/signup', (req, res) => {
     res.render('signup', { req })
 })
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", [
+    check('email').trim().normalizeEmail().isEmail(),
+    check("password").trim().isLength({ min: 6, max: 20 }),
+    check("confirmPassword").trim().isLength({ min: 6, max: 20 })
+], async (req, res) => {
+    const errors = validationResult(req)
+    console.log(errors)
     const { email, password, confirmPassword } = req.body;
     const existingUser = await userRepo.getOneBy({ email })
 
