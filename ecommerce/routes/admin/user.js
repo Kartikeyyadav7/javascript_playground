@@ -9,24 +9,35 @@ router.get('/signup', (req, res) => {
 })
 
 router.post("/signup", [
-    check('email').trim().normalizeEmail().isEmail(),
-    check("password").trim().isLength({ min: 6, max: 20 }),
-    check("confirmPassword").trim().isLength({ min: 6, max: 20 })
+    check('email')
+        .trim()
+        .normalizeEmail()
+        .isEmail()
+        .custom(async (email) => {
+            const existingUser = await userRepo.getOneBy({ email })
+
+            if (existingUser) {
+                throw new Error('Email already in use')
+            }
+        }),
+    check("password")
+        .trim()
+        .isLength({ min: 6, max: 20 }),
+    check("confirmPassword")
+        .trim()
+        .isLength({ min: 6, max: 20 })
+        .custom(async (confirmPassword, { req }) => {
+            if (confirmPassword !== req.body.password) {
+                throw new Error('Passwords must match')
+            }
+        })
 ], async (req, res) => {
+
     const errors = validationResult(req)
     console.log(errors)
+
     const { email, password, confirmPassword } = req.body;
-    const existingUser = await userRepo.getOneBy({ email })
 
-    console.log(existingUser)
-
-    if (existingUser) {
-        return res.send('Email already in Use')
-    }
-
-    if (password !== confirmPassword) {
-        return res.send("Passwords must match")
-    }
 
     const user = await userRepo.create({ email, password })
 
