@@ -1,6 +1,7 @@
 const userRepo = require("../../repository/user")
 const express = require('express')
-const { check, validationResult } = require("express-validator")
+const { validationResult } = require("express-validator")
+const { requireEmail, requirePassword, requireConfirmPassword } = require("../../middlewares/validators")
 
 const router = express.Router()
 
@@ -8,33 +9,13 @@ router.get('/signup', (req, res) => {
     res.render('signup', { req })
 })
 
-router.post("/signup", [
-    check('email')
-        .trim()
-        .normalizeEmail()
-        .isEmail()
-        .custom(async (email) => {
-            const existingUser = await userRepo.getOneBy({ email })
-
-            if (existingUser) {
-                throw new Error('Email already in use')
-            }
-        }),
-    check("password")
-        .trim()
-        .isLength({ min: 6, max: 20 }),
-    check("confirmPassword")
-        .trim()
-        .isLength({ min: 6, max: 20 })
-        .custom(async (confirmPassword, { req }) => {
-            if (confirmPassword !== req.body.password) {
-                throw new Error('Passwords must match')
-            }
-        })
-], async (req, res) => {
+router.post("/signup", [requireEmail, requirePassword, requireConfirmPassword], async (req, res) => {
 
     const errors = validationResult(req)
-    console.log(errors)
+
+    if (!errors.isEmpty()) {
+        return res.render('signup', { req, errors })
+    }
 
     const { email, password, confirmPassword } = req.body;
 
