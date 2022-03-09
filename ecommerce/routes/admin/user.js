@@ -1,12 +1,13 @@
 const userRepo = require("../../repository/user")
 const express = require('express')
-const { validationResult } = require("express-validator")
-const { requireEmail, requirePassword, requireConfirmPassword } = require("../../middlewares/validators")
-
+const { validationResult, check } = require("express-validator")
+const { requireEmail, requirePassword, requireConfirmPassword, requireEmailExists, requireValidPasswordForUser } = require("../../middlewares/validators")
+const getError = require('../../helpers/error')
+const user = require("../../repository/user")
 const router = express.Router()
 
 router.get('/signup', (req, res) => {
-    res.render('signup', { req })
+    res.render('signup', { req, getError })
 })
 
 router.post("/signup", [requireEmail, requirePassword, requireConfirmPassword], async (req, res) => {
@@ -14,7 +15,7 @@ router.post("/signup", [requireEmail, requirePassword, requireConfirmPassword], 
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
-        return res.render('signup', { req, errors })
+        return res.render('signup', { req, errors, getError })
     }
 
     const { email, password, confirmPassword } = req.body;
@@ -37,27 +38,23 @@ router.get("/signin", (req, res) => {
 })
 
 
-router.post('/signin', async (req, res) => {
-    const { email, password } = req.body;
-    const user = await userRepo.getOneBy({ email })
+router.post('/signin', [requireEmailExists, requireValidPasswordForUser],
+    async (req, res) => {
 
-    if (!user) {
-        return res.send("User not found")
-    }
+        const errors = validationResult(req)
 
-    const validPassword = await userRepo.comparedPassword(
-        user.password,
-        password
-    )
+        if (!errors.isEmpty()) {
+            return res.render('signin', { req, errors, getError })
+        }
 
-    if (!validPassword) {
-        return res.send("Password not valid")
-    }
+        const { email, password } = req.body;
 
-    req.session.userID = user.id
+        const user = await userRepo.getOneBy({ email })
 
-    res.send("You are logged in")
-})
+        req.session.userID = user.id
+
+        res.send("You are logged in")
+    })
 
 
 module.exports = router
