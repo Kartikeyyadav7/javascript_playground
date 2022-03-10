@@ -53,6 +53,14 @@ module.exports = {
                 throw new Error("Invalid Password")
             }
 
-        })
+        }),
+    requireTitle: check('title')
+        .trim()
+        .isLength({ min: 5, max: 40 }),
+    requirePrice: check('price')
+        .trim()
+        .isFloat() //This just converts the value to a float
+        .isFloat({ min: 1 }) // This check that the min value of price entered is 1
+
 
 }
